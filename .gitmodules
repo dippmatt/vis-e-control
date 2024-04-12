@@ -1,0 +1,3 @@
+[submodule "third_party/GeoJSON-TopoJSON-Austria"]
+	path = third_party/GeoJSON-TopoJSON-Austria
+	url = https://github.com/ginseng666/GeoJSON-TopoJSON-Austria.git
