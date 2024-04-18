@@ -10,17 +10,6 @@ this_file = Path(__file__).parent.resolve()
 austria_simplifyed = this_file / Path("..", "third_party", "GeoJSON-TopoJSON-Austria", "2021", "simplified-99.5", "gemeinden_995_geo.json")
 
 
-
-# load the xlsx data
-vienna = this_file / Path("..", "dataset", "vienna.xlsx")
-df = pd.read_excel(vienna)
-print(df.head())
-for index, row in df.iterrows():
-    print(row['Eingespeister Strom (kWh) 2024'])
-    break
-
-import sys; sys.exit(0)
-
 with open(austria_simplifyed) as f:
     polygons = json.load(f)
 
