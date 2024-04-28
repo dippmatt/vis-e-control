@@ -65,8 +65,11 @@ def display_choropleth(year, threshold):
         mapbox_style="open-street-map",
         range_color=[0, threshold*1000000],
         opacity=0.5,
-        labels={year: "Energy produced in kWh"})
+        labels={year: "kWh"},
+        hover_data={"Gemeindename": True, year: True})
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    # also add the label for "Gemeindename"
+    
 
     return fig
 

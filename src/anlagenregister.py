@@ -281,6 +281,9 @@ class Anlagenregister():
         sum_df = self.database.groupby('gcd').agg({col: 'sum' for col in self.database.columns if ('Eingespeister Strom' in col or 'Engpassleistung' in col)})
         # extract the index as a column
         sum_df.reset_index(inplace=True)
+
+        # get the Gemeindename from the 'gcd' column
+        sum_df['Gemeindename'] = sum_df['gcd'].apply(lambda x: self.gemeindeliste_pd[self.gemeindeliste_pd['Gemeinde code'] == x]['Gemeindename'].values[0])
         
         return sum_df
 
