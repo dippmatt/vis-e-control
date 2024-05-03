@@ -328,18 +328,7 @@ def main():
     this_file = Path(__file__).parent.resolve()
     dataset = this_file / Path("..", "dataset")
     anlagenregister = Anlagenregister(dataset)
-    anlagenregister.print_austria()
-
-    import sys; sys.exit(0)
-
-    gemindecode = anlagenregister._plz2gcd(1190)
-    print(gemindecode)
-
-    for index, row in anlagenregister.database.iterrows():
-        plz = row['Plz']
-        print(f"PLZ: {type(plz)}")
-        break
-        if index > 10:
-            break
+    assert anlagenregister is not None, "Could not create the Anlagenregister object."
+    
 if __name__ == "__main__":
     main()
