@@ -17,7 +17,7 @@ Replace \<X\> with your version of python. Find your python version using `pytho
 
 ## Getting started
 
- - Install the required python requirements using `make init_venv`.
+ - Install the required python requirements using `make init_env`.
 
 - Then activate the environment using `source venv/bin/activate`
 

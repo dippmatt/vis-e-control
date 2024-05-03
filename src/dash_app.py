@@ -22,30 +22,41 @@ app = Dash(__name__)
 # create a dash app
 # visit http://127.0.0.1:8050/ to view the app
 
+# Use the following function when accessing the value of 'my-slider'
+# in callbacks to transform the output value to logarithmic
+def transform_value(value):
+    return 10 ** value
+
 app.layout = html.Div([
-    html.H4('Photovoltaic production in kWh in Austria by Gemeinde'),
-    html.P("Select a year:"),
+    html.H1('Austrian photovoltaic energy production in kWh by Gemeinde', style={"font-family": "Arial"}),
+    html.H3("Select a year:", style={"font-family": "Arial"}),
     dcc.RadioItems(
         id='year', 
-        options=["Eingespeister Strom (kWh) 2024", 
-                 "Eingespeister Strom (kWh) 2023", 
-                 "Eingespeister Strom (kWh) 2022", 
-                 "Eingespeister Strom (kWh) 2021", 
-                 "Eingespeister Strom (kWh) 2020", 
-                 "Eingespeister Strom (kWh) 2019"],
-        value="Eingespeister Strom (kWh) 2024",
-        inline=True
+        options=["2024", 
+                 "2023", 
+                 "2022", 
+                 "2021", 
+                 "2020", 
+                 "2019"],
+        value="2023",
+        inline=True,
+        style={"font-family": "Arial"}
     ),
+    html.Br(),
     dcc.Graph(id="graph"),
     html.Br(),
-    html.Label('Max Color threshold [GWh]:'),
+    html.H3('Color scale range [GWh]:', style={"font-family": "Arial"}),
     dcc.Slider(
         id='threshold', 
         min=0,
         max=int(color_threshold * 1.1 / 1000000),
-        marks={i: f'{i * 2}' for i in range(1, int(color_threshold * 1.1 / 1000000 / 2))},
+        step=int(color_threshold * 1.1 / 1000000) / 10,
+        #marks={i: '{}'.format(10 ** i) for i in range(10)},
+        #marks={i: str(i) for i in range(0, int(color_threshold * 1.1 / 1000000), 1)},        
         value=5,
     ),
+    #html.P("Source:", style={"font-family": "Arial"}),
+    html.A("Source: Anlagenregister E-Control", href='https://anlagenregister.at/', target="_blank")
 ])
 
 
@@ -56,17 +67,19 @@ app.layout = html.Div([
 def display_choropleth(year, threshold):
     df = photovoltaic_data
     geojson = map_geojson
+    year_key = "Eingespeister Strom (kWh) " + year
 
     fig = px.choropleth_mapbox(
-        df, geojson=geojson, color=year,
+        df, geojson=geojson, color=year_key,
         color_continuous_scale="Viridis",
         locations="gcd",
         center={"lat": 47.69, "lon": 13.34}, zoom=6,
         mapbox_style="open-street-map",
+        #range_color=[0, transform_value(threshold*1000000)],
         range_color=[0, threshold*1000000],
         opacity=0.5,
-        labels={year: "kWh"},
-        hover_data={"Gemeindename": True, year: True})
+        labels={year_key: "kWh"},
+        hover_data={"Gemeindename": True, "PLZ": True, year_key: True})
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     # also add the label for "Gemeindename"
     

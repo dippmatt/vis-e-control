@@ -284,6 +284,17 @@ class Anlagenregister():
 
         # get the Gemeindename from the 'gcd' column
         sum_df['Gemeindename'] = sum_df['gcd'].apply(lambda x: self.gemeindeliste_pd[self.gemeindeliste_pd['Gemeinde code'] == x]['Gemeindename'].values[0])
+
+        # add PLZ to the dataframe
+        sum_df['PLZ'] = sum_df['gcd'].apply(lambda x: self.gemeindeliste_pd[self.gemeindeliste_pd['Gemeinde code'] == x]['PLZ des Gem.Amtes'].values[0])
+
+        # for each column that contains 'Eingespeister Strom' in the name, convert the value to log10 scale
+        for col in sum_df.columns:
+            if 'Eingespeister Strom' in col:
+                sum_df[col + ' log'] = np.log10(sum_df[col] + 1)
+
+        # print(sum_df.head())
+        # import sys; sys.exit(0)
         
         return sum_df
 
