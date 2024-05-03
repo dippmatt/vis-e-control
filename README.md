@@ -31,10 +31,13 @@ Replace \<X\> with your version of python. Find your python version using `pytho
 - `make process_data` first preprocesses the raw dataset from Anlagenregister. This step reads the downloaded Excel files from Anlagenregister then performs elaborated preprocessing to
     
     1) Combine all Bundesländer into one database for Austria.
-    2) Find the `Gemeindecode` for each entry in the database. The Anlagenregister stores entries by **Gemeindename** and **Postleizahl (PLZ)**. The PLZ is not a unique identifyer for a Gemeinde in Austria but the Gemeindecode is one. Unfortunately, a translation from PLZ to Gemeindecode is not easy due to several reasons:
+    2) Filter out any entries that are not Photovoltaic energy production.
+    3) Find the `Gemeindecode` for each entry in the database. The Anlagenregister stores entries by **Gemeindename** and **Postleizahl (PLZ)**. The PLZ is not a unique identifyer for a Gemeinde in Austria but the Gemeindecode is one. Unfortunately, a translation from PLZ to Gemeindecode is not easy due to several reasons:
         - The Anlagenregister from E-Control is a **Schemaless Database**, meaning that the database does not enforce certain rules for columns. This is due to manual errors when creating new entries and the lack of Schema Validation. Examples include different interpretations of the column `PLZ` such as `1040`, `A-1040`, `A/1040`, `1040 Wieden`, etc.
         - A one-to-many relationship from `Gemeindecode` to `PLZ`. Many Gemeinden have several PLZ (one primary and several auxiliary ones). - Some Gemeinden have the same PLZ.
     
+        The reference to match all PLZ to a Gemeindecode is the 
+        [official register from Statistik Austria](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.statistik.at/verzeichnis/reglisten/gemliste_knz.xls&ved=2ahUKEwif1aDjrPGFAxXaQ_EDHZeMA6wQFnoECA4QAQ&usg=AOvVaw1-PqXUck-1tuIz0Sww2fgf). 
         All these issues are addressed using pattern matching techniques and string comparison based on the **Levenshtein distance** to identify the most likly candidate for two Gemeinden to match if several options exist.
 - The actual web app is then launched based on the preprocessed data using `make run_app`.
 
